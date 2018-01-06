@@ -1,0 +1,142 @@
+{{{template "common/header.html" .}}}
+
+<span class="layui-breadcrumb" lay-separator="->">
+  <a href="javascript:void(0)">扫描管理</a>
+  <a><cite>域名扫描</cite></a>
+</span>
+
+<div class="demoTable" style="margin-top: 10px">
+<fieldset class="layui-elem-field">
+    <legend style="font-size: 10px;">查询条件</legend>
+<div class="layui-field-box">
+<form class="layui-form" action="" onsubmit="return false">
+<table class="layui-table" lay-size="sm">
+    <tr>
+        <td>源域名</td>
+        <td>
+            <div class="layui-inline">
+                <input class="layui-input" name="domain" id="domain" autocomplete="off"
+                       placeholder="源域名">
+            </div>
+        </td>
+    </tr>
+
+    <tr>
+        <td colspan="9" align="center">
+            <button class="layui-btn layui-btn-sm" lay-submit lay-filter="searchEventBtn"
+                    id="searchEventBtn">查询
+            </button>
+        </td>
+    </tr>
+</table>
+</form>
+</div>
+</fieldset>
+</div>
+
+<table class="layui-hide" id="LAY_table_message" lay-filter="messageList"></table>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
+</script>
+
+</body>
+
+
+<script>
+    layui.use(['layer', 'layedit', 'element', 'table', 'laytpl','laydate'], function () {
+        var element = layui.element;
+        var table = layui.table;
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var layedit = layui.layedit;
+        var laydate = layui.laydate;
+
+        //时间选择器
+        laydate.render({
+            elem: '#test5'
+            ,type: 'datetime'
+        });
+
+
+        //监听工具条
+    table.on('tool(messageList)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+        var data = obj.data; //获得当前行数据
+        var layEvent = obj.event; //获得 lay-event 对应的值
+        var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+    if (layEvent === 'delete') {
+    layer.confirm('您确定关闭（' + data.title + '）该事件吗？', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+        layer.load(1)
+    $.ajax({
+        url: '/DomainScannerResultDelete',
+    data: {
+        "_xsrf": $('input[name="_xsrf"]').val(),
+        '_id': data._id
+    },
+        type: 'post',
+    success: function (data) {
+    if (data.status == 0) {
+        layer.closeAll();
+        layer.alert("删除成功", function (index) {
+            location.reload();
+        });
+    } else {
+        layer.closeAll();
+    layer.alert("删除失败", function (index) {
+        location.reload();
+    });
+    }
+    }
+    });
+    }, function () {
+    });
+    }
+    });
+
+
+    $.ajax({
+        url: '/DomainScannerResultList',
+        method: 'GET',
+    success: function (res) {
+    var tableOptions = {
+        elem: '#LAY_table_message',
+        id: 'messageListReload',
+        limits: [10, 20, 50, 100],
+        limit: 10,
+        page: true,
+        loading: true,
+    cols: [[
+    {type: 'numbers'}
+        , {field: 'url', title: 'Url', width: '15%', unresize: true}
+        , {field: 'fingerprint', title: '指纹', width: '15%', unresize: true}
+        , {field: 'create_time', title: '创建时间', width: '15%', unresize: true}
+        , {field: 'title', title: '标题', width: '30%', unresize: true}
+        ,{field: 'source_domain', title: '源域名', width: '10%', unresize: true}
+        , {fixed: 'right', width: '15%', align: 'right', toolbar: '#barDemo', unresize: true},
+    ]],
+        data: res.data,
+        total: res.count,
+    };
+        table.render(tableOptions);
+    },
+        error: function () {
+
+        }
+    });
+
+    $('#searchReportBtn').click(function () {
+        var str = $('#domain').val();
+        table.reload("messageListReload", {
+        where: {
+            "title": str
+        }
+        , height: 'full-90'
+    });
+    });
+    });
+</script>
+
+{{{template "common/footer.html" .}}}

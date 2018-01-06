@@ -1,0 +1,138 @@
+{{{template "common/header.html" .}}}
+{{{template "common/left_nav.html" .}}}
+<style>
+    .ul-cls {
+        list-style-type: demical;
+        width: 100%;
+        padding: 20px;
+        line-height: 40px;
+    }
+
+    .ul-cls li {
+        list-style: disc;
+        list-style-position: outside;
+    }
+</style>
+<div class="layui-body" id="layui-body-content">
+    <!-- 内容主体区域 -->
+    <div class="layui-tab layui-tab-brief" lay-filter="demo" lay-allowclose="true">
+        <ul class="layui-tab-title">
+            <li class="layui-this">RBAC网站信息</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <fieldset class="layui-elem-field">
+                    <legend>开发信息</legend>
+                    <div class="layui-field-box" style="padding: 30px">
+                        <p>
+                            团队网站：<a href="https://maixiang.jd.com" class="layui-btn layui-btn-normal layui-btn-sm">
+                            https://maixiang.jd.com</a>
+                        </p>
+                        <br>
+                        <p>
+                            开发团队：<a href="https://maixiang.jd.com"
+                                    class="layui-btn layui-btn-warm layui-btn-sm">脉象研发团队</a>
+                        </p>
+                        <br>
+                        <p>
+                            邮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;箱： maixiang@jd.com
+                        </p>
+                        <br>
+                        <p>
+                            码云地址：<a href="https://gitee.com/haosw/pulse-admin"
+                                    class="layui-btn layui-btn-normal layui-btn-sm">
+                            https://gitee.com/haosw/pulse-admin</a>
+                        </p>
+                        <br>
+
+                    </div>
+                </fieldset>
+
+                <br>
+                <h3></h3>
+                <fieldset class="layui-elem-field">
+                    <legend>Rbac使用说明</legend>
+                    <div class="layui-field-box">
+                        <ol class="ul-cls">
+                            <li>
+                                新方法添加权限
+                                <br>
+                                权限管理－添加权限
+                                <br>
+                                角色管理－添加角色<br>
+                                角色管理－配置权限
+                                <br>
+                                Controller-Action里使用：<br>
+                                control, action := this.GetControllerAndAction()<br>
+                                this.CheckRbacAll(control,action)<br>
+                            </li>
+                        </ol>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="layui-footer">
+    <!-- 底部固定区域 -->
+    © Rbac Golang权限管理系统
+</div>
+</div>
+<script>
+//JavaScript代码区域
+layui.use('element', function () {
+    var $ = layui.jquery;
+    var element = layui.element;
+    element.init();
+    $('.layui-nav-tree').find("li:eq(0)").attr("class","layui-nav-item  layui-nav-itemed");
+if($('.layui-nav-tree').find("li").length<=0){
+$('.layui-layout-left').find("li a").each(function () {
+    window.location.href=$(this).attr("href");
+    return false;
+});
+}
+    //触发事件
+var active = {
+tabAdd: function (othis) {
+    //" + ($('#layui-body-content').height() - 90) + "
+    var src = "<iframe src='" + othis.attr("data-src") + "'  scrolling=\"auto\" frameborder=\"0\"" +
+            " class=\"ly-iframe admin-iframe\" width='100%'" +
+            " height='" + ($('#layui-body-content').height() - 90) + "'></iframe>";
+    var data_id = othis.attr("data-id");
+    var title = othis.html();
+
+    var lay_arr = new Array();
+    var has_id = 0;
+$(".layui-tab-title li").each(function () {
+    lay_arr.push($(this).attr('lay-id'));
+        for (var i in lay_arr) { //判断变量id值是否在其中
+if (lay_arr[i] == data_id) {
+    has_id = 1;
+}
+}
+});
+    if (has_id == 1) { //切换到指定Tab项
+        element.tabChange('demo', data_id);
+    } else {
+        element.tabAdd('demo', {
+            title: title //用于演示
+            , content: src
+            , id: data_id
+        });
+        element.tabChange('demo', data_id); //切换到：当前添加
+    }
+}
+};
+    $('.site-demo-active').on('click', function () {
+        var othis = $(this), type = othis.data('type');
+        active[type] ? active[type].call(this, othis) : '';
+    });
+    //Hash地址的定位
+    var layid = location.hash.replace(/^#test=/, '');
+    element.tabChange('test', layid);
+element.on('tab(test)', function (elem) {
+    location.hash = 'test=' + $(this).attr('lay-id');
+});
+});
+</script>
+{{{template "common/footer.html" .}}}
