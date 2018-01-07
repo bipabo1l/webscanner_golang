@@ -8,8 +8,9 @@ type MainController struct {
 	beego.Controller
 }
 
-func (c *MainController) Get() {
-	c.Data["Website"] = "beego.me"
-	c.Data["Email"] = "astaxie@gmail.com"
-	c.TplName = "index.tpl"
+func (this *MainController) Get() {
+	beego.SetStaticPath("/layui", "/static/layui")
+	beego.BConfig.WebConfig.TemplateLeft = "{{{"
+	beego.BConfig.WebConfig.TemplateRight = "}}}"
+	this.TplName = "index.html"
 }
