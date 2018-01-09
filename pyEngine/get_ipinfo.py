@@ -5,16 +5,26 @@ import optparse
 import os
 import webEye
 
+from pymongo import MongoClient
 import re
 import requests
 from IPy import IP
-from app import app, db_connect, sys_config
 import time
 
 ISOTIMEFORMAT = "%Y-%m-%d %X"
 port_range = [80,8080,8088,8888,8000 ]
 int_ip = lambda x: '.'.join([str(x/(256**i)%256) for i in range(3,-1,-1)])
 ip_int = lambda x:sum([256**j*int(i) for j,i in enumerate(x.split('.')[::-1])])
+
+sys_config = {
+    "database": {
+        "db_host": "mongodb://127.0.0.1:27017/"
+        ,"db_name": "webscanner",
+  }
+}
+
+client = MongoClient(sys_config['database']['db_host'])
+db_connect = client[sys_config['database']['db_name']]
 
 def get_IP():
     pass

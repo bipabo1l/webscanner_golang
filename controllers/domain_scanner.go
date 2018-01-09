@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"lazyscanner_golang/models"
+	"webscanner_golang/models"
 	"gopkg.in/mgo.v2/bson"
 	"strconv"
 )
@@ -23,7 +23,7 @@ func (this *DomainScannerController) DomainScannerResultList() {
 	w := bson.M{}
 	url := this.Input().Get("domain")
 	if url != "" {
-		w = bson.M{"source_domain": url}
+		w = bson.M{"source_domain": bson.M{"$regex": url, "$options": "$i"}}
 	}
 	page, _ := strconv.Atoi(this.Input().Get("page"))
 	page = page - 1

@@ -1,7 +1,7 @@
 package main
 
 import (
-	_ "lazyscanner_golang/routers"
+	_ "webscanner_golang/routers"
 	"github.com/astaxie/beego"
 )
 
