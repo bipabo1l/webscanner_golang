@@ -1,5 +1,4 @@
 {{{template "common/header.html" .}}}
-{{{template "common/left_nav.html" .}}}
 
 <span class="layui-breadcrumb" lay-separator="->">
   <a href="javascript:void(0)">扫描管理</a>
@@ -97,36 +96,25 @@
         }
     });
 
-
-    $.ajax({
+    var tableOptions = {
         url: '/DomainScannerResultList',
-        method: 'GET',
-        success: function (res) {
-        var tableOptions = {
-            elem: '#LAY_table_message',
-            id: 'messageListReload',
-            limits: [10, 20, 50, 100],
-            limit: 10,
-            page: true,
-            loading: true,
-            cols: [[
+        elem: '#LAY_table_message',
+        id: 'messageListReload',
+        limits: [10, 20, 50, 100],
+        limit: 10,
+        page: true,
+        loading: true,
+        cols: [[
             {type: 'numbers'}
                 , {field: 'url', title: 'Url', width: '15%', unresize: true}
                 , {field: 'fingerprint', title: '指纹', width: '15%', unresize: true}
-                , {field: 'create_time', title: '创建时间', width: '15%', unresize: true}
                 , {field: 'title', title: '标题', width: '30%', unresize: true}
                 ,{field: 'source_domain', title: '源域名', width: '10%', unresize: true}
                 , {fixed: 'right', width: '15%', align: 'right', toolbar: '#barDemo', unresize: true},
-            ]],
-            data: res.data,
-            total: res.count,
-        };
-        table.render(tableOptions);
-    },
-        error: function () {
-
-        }
-    });
+        ]],
+        height: 'full-90',
+    };
+    table.render(tableOptions);
 
     $('#searchEventBtn').click(function () {
         var str = $('#domain').val();

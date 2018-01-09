@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"webscanner_golang/models"
+	"lazyscanner_golang/models"
 	"gopkg.in/mgo.v2/bson"
 	"strconv"
 )

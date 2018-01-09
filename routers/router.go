@@ -1,7 +1,7 @@
 package routers
 
 import (
-	"webscanner_golang/controllers"
+	"lazyscanner_golang/controllers"
 	"github.com/astaxie/beego"
 )
 
